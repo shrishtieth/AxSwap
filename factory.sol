@@ -414,6 +414,28 @@ contract AxiaswapV2Factory is IAxiaswapV2Factory {
         return allPairs.length;
     }
 
+    function getUserLiquidity(address user) external view returns(address[] memory liquidity){
+    uint itemCount = allPairs.length;
+    uint currentIndex = 0;
+    uint256 total;
+
+    for(uint256 i =0; i< itemCount; i++){
+        if(AxiaswapV2Pair(allPairs[i]).balanceOf(user)>0){
+           total++;
+        }
+    }
+
+    address[] memory items = new address[](total);
+    for(uint256 i =0; i< itemCount; i++){
+        if(AxiaswapV2Pair(allPairs[i]).balanceOf(user)>0){
+           items[currentIndex] = allPairs[i];
+           currentIndex++;
+        }
+    }
+    return items;
+
+    }
+
     function createPair(address tokenA, address tokenB) external returns (address pair) {
         require(tokenA != tokenB, 'AxiaswapV2: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
